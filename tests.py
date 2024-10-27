@@ -33,10 +33,13 @@ class TestBooksCollector:
 
         assert len(collector.get_books_genre())==2
 
+    @pytest.mark.parametrize('name,genre', [['Ведьмак', 'Фантастика'], ['Десять негритят', 'Детективы']])
+    def test_set_book_genre_set_genre_to_book(self,name,genre):
+        collector = BooksCollector()
+        collector.add_new_book(name)
+        collector.set_book_genre(name, genre)
+        assert collector.books_genre[name]==genre
 
-    def test_set_book_genre_set_genre_to_book(self,collector):
-
-        assert collector.books_genre['Ведьмак']=='Фантастика'
 
     def test_set_book_genre_genre_not_in_list_flase(self):
         collector = BooksCollector()
@@ -77,15 +80,25 @@ class TestBooksCollector:
 
         assert collector.favorites==['Ведьмак']
 
-    def test_delete_book_from_favorites_delete_from_list(self,collector_favorite):
 
-        collector_favorite.delete_book_from_favorites('Ведьмак')
+    @pytest.mark.parametrize('name', ['Ведьмак','Война и мир'])
+    def test_delete_book_from_favorites_delete_from_list_true(self,name):
+        collector = BooksCollector()
+        collector.add_new_book('Ведьмак')
+        collector.add_book_in_favorites('Ведьмак')
+        collector.add_new_book('Война и мир')
+        collector.add_book_in_favorites('Война и мир')
+        collector.delete_book_from_favorites(name)
+        assert len(collector.favorites) == 1
 
-        assert collector_favorite.favorites == []
 
-    def test_get_list_of_favorites_books_get_list(self,collector_favorite):
-
-        assert collector.get_list_of_favorites_books()==['Ведьмак']
+    def test_get_list_of_favorites_books_get_list(self):
+        collector = BooksCollector()
+        collector.add_new_book('Ведьмак')
+        collector.add_book_in_favorites('Ведьмак')
+        collector.add_new_book('Война и мир')
+        collector.add_book_in_favorites('Война и мир')
+        assert len(collector.get_list_of_favorites_books())==2
 
 
 
